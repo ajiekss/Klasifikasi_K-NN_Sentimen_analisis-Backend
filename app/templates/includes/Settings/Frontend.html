@@ -1,0 +1,94 @@
+{% include 'layouts/header.html' %} 
+
+{% include 'layouts/sideBar.html' %} 
+
+{% include 'layouts/topBar.html' %}
+
+ <!-- Begin Page Content -->
+ <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Setting Frontend</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4 py-3 border-left-success">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="select_isifrontend"></label>
+                        <select class="form-control" name="" id="select_isifrontend" onchange="data(this)">
+                          <option value="0">Judul</option>
+                          <option value="1">Sub-Judul</option>
+                          <option value="2">Data Type</option>
+                        </select>
+                    </div>
+                    <form id="judul" style="display: none;" action="/updateJudul" method="post">
+                        <h4 class="card-title">Judul</h4>
+                        <textarea id='tinyMceExample1' name="judul">
+                        {{ session.dataJudul }}
+                        </textarea>
+                        <br>
+                        <button type="submit" id="submitarea" class="btn btn-success">Submit</button>
+                      </form>
+                      <br>
+                      <form id="subjudul" style="display: none;" action="/updateSubjudul" method="post">
+                        <h4 class="card-title">Sub Judul</h4>
+                        <textarea id='tinyMceExample2' name="subjudul">
+                        {{ session.subJudul }}
+                        </textarea>
+                        <br>
+                        <button type="submit" id="submitarea" class="btn btn-success">Submit</button>
+                      </form>
+                      <br>
+                      <form id="judul-datatype" style="display: none;" action="/dataType" method="post">
+                        <h4 class="card-title">Judul Data Type</h4>
+                        <textarea id='tinyMceExample3' name="datatype">
+                        {{ session.dataType }}
+                        </textarea>
+                        <br>
+                        <button type="submit" id="submitarea" class="btn btn-gradient-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+<script>
+document.getElementById(''+window.localStorage.judul).style.display = 'block'
+document.getElementById('select_isifrontend').value = window.localStorage.nilai
+
+function data(select){
+    if (select.value == 0) {
+        document.getElementById('judul').style.display ='block'
+        var jud = document.getElementById('judul').getAttribute('id')
+        window.localStorage.judul = jud
+        window.localStorage.nilai = 0
+    }
+    else if(select.value == 1){
+        document.getElementById('subjudul').style.display ='block'
+        document.getElementById('judul').style.display ='none'
+        var jud = document.getElementById('subjudul').getAttribute('id')
+        window.localStorage.judul = jud
+        window.localStorage.nilai = 1
+    }
+    else if(select.value == 2){
+        document.getElementById('judul-datatype').style.display ='block'
+        document.getElementById('subjudul').style.display ='none'
+        document.getElementById('judul').style.display ='none'
+        var jud = document.getElementById('judul-datatype').getAttribute('id')
+        window.localStorage.judul = jud
+        window.localStorage.nilai = 2
+    }
+}
+</script>
+
+{% include 'layouts/footer.html' %}

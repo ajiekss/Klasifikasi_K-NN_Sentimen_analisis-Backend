@@ -1,0 +1,77 @@
+{% include 'layouts_login/header.html' %}
+
+<div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block" id="bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                        </div>
+                        <form class="user" action="/signup" method="POST">
+                            <div class="form-group">
+                                <input type="text" name="username" class="form-control form-control-user"
+                                    placeholder="Username" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" class="form-control form-control-user"
+                                    placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" class="form-control form-control-user"
+                                    placeholder="Password" required>
+                            </div>
+                            <div class="form-group" hidden>
+                                <input type="text" name="user" value="user" class="form-control form-control-user"
+                                    placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                Register Account
+                            </button>
+                            {% if msg != '' or msgerr != '' %}
+                            <hr>
+                            {% endif %}
+                            <div class="text-center">
+                                {% if msg %}
+                                <h5 style="color: #15ff00;">{{ msg }}</h5>
+                                {% endif %}
+                                {% if msgerr %}
+                                <h5 style="color: #ff0000;">{{ msgerr }}</h5>
+                                {% endif %}
+                            </div>
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="/login">Already have an account? Login!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+     var config = { headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'}
+        }
+        axios.get('http://localhost:5000/LS',config)
+        .then(res => {
+            var dL = res.data.data[0].image
+            var datal = document.getElementById('bg-register-image')
+            datal.style.background = "url('../static/img/"+dL+"')" ;
+            datal.style.backgroundPosition = "center";
+            datal.style.backgroundSize= "cover";
+        })
+        .catch(err =>{
+            console.log(err)
+        })
+</script>
+
+{% include 'layouts_login/footer.html' %}

@@ -1,0 +1,396 @@
+{% include 'layouts/header.html' %} 
+
+{% include 'layouts/sideBar.html' %} 
+
+{% include 'layouts/topBar.html' %}
+
+ <!-- Begin Page Content -->
+ <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Proses Klasifikasi KNN</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4 py-3 border-left-success">
+                <div class="card-body">
+                  <form id="klasifikasi">
+                    <h5>Maukkan Nilai K=</h5>
+                    <input type="number" id="nilaiK" required="" oninvalid="this.setCustomValidity('Harus Masukkan Nilai K')" oninput="setCustomValidity('')">
+                    <br>
+                    <br>
+                    <div class="group">
+                          <input class="form-control form-control-user" id="kataKunci" type="text" required="" oninvalid="this.setCustomValidity('Harus Masukkan Kata Kunci')" oninput="setCustomValidity('')">
+                          <span class="highlight"></span>
+                          <span class="bar"></span>
+                          <div class="garis_bawah"></div>
+                          <label>Masukkan Kata Kunci</label>
+                          <button type="submit">Search &nbsp;<i class='bx bx-search bx-tada-hover'></i></button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Content Row -->
+     <div class="row" id="hiddenKlasifikasi" hidden>
+      <div class="col-lg-6">
+          <div class="card mb-4 py-3 border-left-success">
+              <div class="card-body">
+                <h3>
+                  <b>Klasifikasi Data Awal</b>
+                </h3>
+                <br>
+                <b>Jumlah Data</b>
+                <br>
+                <div class="row no-gutters align-items-center">
+                  <div class="col-auto">
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="jumlahDA"></div>
+                  </div>
+              </div>
+              <br>
+              <div class="circle1">
+                <strong></strong> Akurasi Data
+              </div>
+              <br>
+              Hasil Klasifikasi : <b id="HasilDA"></b>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-6">
+          <div class="card mb-4 py-3 border-left-success">
+              <div class="card-body">
+                <h3>
+                  <b>Klasifikasi Data Smote</b>
+                </h3>
+                <br>
+                <b>Jumlah Data</b>
+                <br>
+                <div class="row no-gutters align-items-center">
+                  <div class="col-auto">
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="jumlahDS"></div>
+                  </div>
+                </div>
+                <br>
+                <div class="circle2">
+                  <strong></strong> Akurasi Data
+                </div>
+                <br>
+                Hasil Klasifikasi : <b id="HasilDS"></b>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-6">
+          <div class="card mb-4 py-3 border-left-success">
+              <div class="card-body">
+                <h3>
+                  <b>Klasifikasi Data Over</b>
+                </h3>
+                <br>
+                <b>Jumlah Data</b>
+                <br>
+                <div class="row no-gutters align-items-center">
+                  <div class="col-auto">
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="jumlahDO"></div>
+                  </div>
+                </div>
+                <br>
+                <div class="circle3">
+                  <strong></strong> Akurasi Data
+                </div>
+                <br>
+                Hasil Klasifikasi : <b id="HasilDO"></b>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-6">
+          <div class="card mb-4 py-3 border-left-success">
+              <div class="card-body">
+                <h3>
+                  <b>Klasifikasi Data Under</b>
+                </h3>
+                <br>
+                <b>Jumlah Data</b>
+                <br>
+                <div class="row no-gutters align-items-center">
+                  <div class="col-auto">
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="jumlahDU"></div>
+                  </div>
+                </div>
+                <br>
+                <div class="circle4">
+                  <strong></strong>  Akurasi Data
+                </div>
+                <br>
+                Hasil Klasifikasi : <b id="HasilDU"></b>
+              </div>
+          </div>
+      </div>
+    </div>
+    
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<script>
+    document.getElementById('nilaiK').value = window.localStorage.nilaiK
+    document.getElementById('klasifikasi').addEventListener('submit', function(e){
+      e.preventDefault();
+      document.getElementById('hiddenKlasifikasi').setAttribute('hidden', true) 
+        Swal.fire({
+            icon: 'success',
+            title: 'Proses Klasifikasi Tunggu Sebentar..!',
+            showConfirmButton: false,
+            timer: 4000
+        })
+        var nilaiK = document.getElementById('nilaiK').value
+        window.localStorage.nilaiK = nilaiK
+        var kataKunci = document.getElementById('kataKunci')
+        var Kunci = kataKunci.value
+        var config = { headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'}
+        }
+        axios.post('http://localhost:5000/KlasifikasiKNN',{ KataKunci: Kunci, nilaiK: nilaiK },config)
+        .then(res => {
+         if(res != ''){
+          document.getElementById('hiddenKlasifikasi').removeAttribute('hidden')
+         }
+          var dres = res
+            var dataDA = res.data.data[0].resultDA[0]
+            var dataDS = res.data.data[0].resultDS[0]
+            var dataDO = res.data.data[0].resultDO[0]
+            var dataDU = res.data.data[0].resultDU[0]
+            document.getElementById('HasilDA').innerHTML = ""+dataDA.dataLabel
+            document.getElementById('jumlahDA').innerHTML = ""+dataDA.lenData
+            document.getElementById('HasilDS').innerHTML = ""+dataDS.dataLabel
+            document.getElementById('jumlahDS').innerHTML = ""+dataDS.lenData
+            document.getElementById('HasilDO').innerHTML = ""+dataDO.dataLabel
+            document.getElementById('jumlahDO').innerHTML = ""+dataDO.lenData
+            document.getElementById('HasilDU').innerHTML = ""+dataDU.dataLabel
+            document.getElementById('jumlahDU').innerHTML = ""+dataDU.lenData
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Proses Klasifikasi Berhasil..!',
+                showConfirmButton: false,
+                timer: 4000
+            })
+
+
+            $('.circle1').circleProgress({
+              value: dataDA.dataAkurasi/100,
+            }).on('circle-animation-progress', function(event, progress) {
+              $(this).find('strong').html(Math.round(dataDA.dataAkurasi * progress) + '<i>%</i>');
+            });
+            $('.circle2').circleProgress({
+              value: dataDS.dataAkurasi/100,
+            }).on('circle-animation-progress', function(event, progress) {
+              $(this).find('strong').html(Math.round(dataDS.dataAkurasi * progress) + '<i>%</i>');
+            });
+            $('.circle3').circleProgress({
+              value: dataDO.dataAkurasi/100,
+            }).on('circle-animation-progress', function(event, progress) {
+              $(this).find('strong').html(Math.round(dataDO.dataAkurasi * progress) + '<i>%</i>');
+            });
+            $('.circle4').circleProgress({
+              value: dataDU.dataAkurasi/100,
+            }).on('circle-animation-progress', function(event, progress) {
+              $(this).find('strong').html(Math.round(dataDU.dataAkurasi * progress) + '<i>%</i>');
+            });
+
+
+        })
+        .catch(err => {
+            Swal.fire({
+            icon: 'error',
+            title: 'Proses Klasifikasi Error..!',
+            showConfirmButton: false,
+            timer: 4000
+        })
+        })
+    })
+</script>
+
+<style>
+
+.circles {
+  margin-bottom: -10px;
+}
+
+.circle {
+  width: 100px;
+  margin: 6px 6px 20px;
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.circle canvas {
+  vertical-align: top;
+}
+
+.circle strong {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  line-height: 40px;
+  font-size: 30px;
+}
+
+.circle strong i {
+  font-style: normal;
+  font-size: 0.6em;
+  font-weight: normal;
+}
+
+.circle span {
+  display: block;
+  color: #aaa;
+  margin-top: 12px;
+}
+
+
+ /* untuk style form ------------------------------- */
+ .group{ 
+    position:relative;
+    margin-bottom:30px;
+  }
+  .group button{
+      position:absolute;
+      top:10px;
+      right: 1%;
+      background: none;
+      border: none;
+    }
+   .group button:hover{
+      color: red;
+    }
+    @media only screen and (max-width:400px){
+      button{
+        right: 3%;
+      }
+    }
+
+    #nilaiK{
+      width: 10%;
+      border-color: #5264AE;
+      border-radius: 5px;
+      margin-bottom: 2em;
+    }
+    #nilaiK:focus{
+      border: none;
+    }
+    #nilaiK:hover{
+      border: none;
+      background-color: #ca1bca57;
+    }
+
+    input:focus   { outline:none; box-shadow: inset 0 -1px 0 #ddd; }
+ /* hr */
+  .garis_bawah{
+    position: relative;
+    border-bottom: 2px #757575 solid;
+    top:-2px;
+    opacity: 0.2;
+    transition: opacity 0.3s 0.2s;
+  }
+
+  .group:hover .garis_bawah{
+    opacity: 0.5;
+  }
+
+  /* untuk label ======================================= */
+  label      {
+    color:#999; 
+    font-size:20px;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:14px;
+    top:10px;
+    transition:0.2s ease all; 
+    -moz-transition:0.2s ease all; 
+    -webkit-transition:0.2s ease all;
+  }
+
+  
+  input:focus ~ label, input:valid ~ label   {
+    top:-30px;
+    font-size:20px;
+    color:#5264AE;
+  }
+/* class form control */
+  .form-control{
+    display:block; 
+    border:none; 
+    border-bottom:0px solid #757575;
+  }
+
+  /* untuk garis bawah ================================= */
+  .bar  { position:relative; display:block; }
+  .bar:before, .bar:after  {
+    content:'';
+    height:2px; 
+    width:0;
+    bottom:0px; 
+    position:absolute;
+    background: #ca1bca; 
+    transition:0.6s ease all; 
+    -moz-transition:0.6s ease all; 
+    -webkit-transition:0.6s ease all;
+  }
+  .bar:before {
+    left:50%;
+  }
+  .bar:after {
+    right:50%; 
+  }
+
+  input:focus ~ .bar:before, input:focus ~ .bar:after {
+    width:50%;
+  }
+
+  /* untuk HIGHLIGHTER ================================== */
+  .highlight {
+    position:absolute;
+    height:60%; 
+    width:100px; 
+    top:25%; 
+    left:0;
+    pointer-events:none;
+    opacity:0.5;
+  }
+
+  input:focus ~ .highlight {
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+  }
+
+  /* membuat animasi ================ */
+  @-webkit-keyframes inputHighlighter {
+   from { background:#5264AE; }
+    to  { width:0; background:transparent; }
+  }
+  @-moz-keyframes inputHighlighter {
+   from { background:#5264AE; }
+    to  { width:0; background:transparent; }
+  }
+  @keyframes inputHighlighter {
+   from { background:#5264AE; }
+    to  { width:0; background:transparent; }
+  }
+</style>
+
+{% include 'layouts/footer.html' %}

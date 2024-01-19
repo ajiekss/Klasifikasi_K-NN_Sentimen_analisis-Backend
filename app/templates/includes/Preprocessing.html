@@ -1,0 +1,173 @@
+{% include 'layouts/header.html' %} 
+
+{% include 'layouts/sideBar.html' %} 
+
+{% include 'layouts/topBar.html' %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Preprocessing</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card mb-4 py-3 border-left-primary">
+                <div class="card-body">
+                    <form id="frmInputF" enctype="multipart/form-data">
+                        <p>
+                            <h5>Inputkan File</h5>
+                        </p>
+                        <div class="form-group">
+                            <input type="file" id="fileInput" class="form-control form-control-user" accept=".csv, .xlsx" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <p>
+                            <div class="row no-gutters align-items-center" id="prgresInput" hidden>
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="labelProgressFile">0%</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div id="progress-barFile" class="progress-bar bg-info" role="progressbar"
+                                            style="width: 0%" aria-valuenow="50" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row" id="PreTex" hidden>
+
+        <div class="col-lg-4">
+            <div class="card mb-4 py-3 border-left-success">
+                <div class="card-body">
+                    <Form action="/ProsesP" method="post">
+                        <input type="text" name="name" id="nameFile" class="form-control form-control-user" hidden>
+                        <button type="submit" id="prosesP" class="btn btn-success">Preprocessing Text</button>
+                    </Form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <!-- Content Row -->
+    <div class="row" id="dataPreHi" hidden>
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Hasil Preprocessing</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <b style="color: blue; line-height: 2;">
+                            Export Data
+                        </b>
+                        {% for table in tables %}
+                            {{ table|safe }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<script>
+    const btnFile = document.getElementById('frmInputF')
+    const progressP = document.getElementById('labelProgressFile')
+    const progressG = document.getElementById('progress-barFile')
+    btnFile.addEventListener('submit', function (e) {
+        document.getElementById('PreTex').setAttribute('hidden', true)
+        document.getElementById('dataPreHi').setAttribute('hidden', true)
+        e.preventDefault();
+        document.getElementById('prgresInput').removeAttribute('hidden')
+        const formData = new FormData();
+        const file = document.getElementById('fileInput');
+        const dataFile = file.files[0];
+        formData.append('dataFile', dataFile);
+
+        const config = {
+            onUploadProgress: function(progressEvent){
+                const percentComplate = Math.round((progressEvent.loaded/progressEvent.total) * 100);
+                progressP.innerHTML= percentComplate+"%";
+                progressG.style.width = percentComplate+"%";
+                if (percentComplate === 100) {
+                    progressP.innerHTML = "Upload Complate!"
+                    var a = 0; 
+                    function timer() {
+                        a++
+                        if(a == 10){
+                            progressP.innerHTML= 0+"%";
+                            progressG.style.width = 0+"%";
+                            document.getElementById('prgresInput').setAttribute('hidden', true)
+                            return a == 10
+                        }
+                        return setTimeout(timer, 500);
+                    }
+                    setTimeout(timer,10)
+                }
+            }
+        }
+
+        axios.post('http://localhost:5000/uploadData', formData, config)
+        .then(res =>{
+            Swal.fire({
+                icon: 'success',
+                title: 'Proses Success..!',
+                showConfirmButton: false,
+                timer: 4000
+            });
+            document.getElementById('PreTex').removeAttribute('hidden')
+            document.getElementById('nameFile').setAttribute("value", res.data.data)
+        })
+        .catch(err =>{
+            Swal.fire({
+                icon: 'error',
+                title: 'Proses Error..!',
+                showConfirmButton: false,
+                timer: 4000
+            });
+        })
+    })
+    var msg = '{{ msg }}'
+    if(msg == 'Berhasil'){
+        Swal.fire({
+                icon: 'success',
+                title: 'Proses Success..!',
+                showConfirmButton: false,
+                timer: 8000
+        });
+        document.getElementById('dataPreHi').removeAttribute('hidden')
+    }
+    $(document).ready(function(){
+        $('#dataPre').DataTable({
+            deferRender:    true,
+            destroy: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf'
+            ]
+        });
+    })
+</script>
+
+{% include 'layouts/footer.html' %}

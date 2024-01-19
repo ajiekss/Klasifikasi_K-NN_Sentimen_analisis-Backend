@@ -1,0 +1,412 @@
+{% include 'layouts/header.html' %} 
+
+{% include 'layouts/sideBar.html' %} 
+
+{% include 'layouts/topBar.html' %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Proses Smote Data Imbalance</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4 py-3 border-left-success">
+                <div class="card-body">
+                    <Form id="SubmitSmote">
+                        <input type="text" id="nameFile" value="data" class="form-control form-control-user" hidden>
+                        <button type="submit" class="btn btn-success">Smote Text</button>
+                    </Form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row" id="grap" hidden>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                               Data Awal Jumlah data : <b id="jDataA">0</b></div>
+                            <img id="DA" style="width: 100%; height: 100%;" src="" alt="">
+                        </div>
+                        <div class="col-auto">
+                            <button id="btnDA" class="btn btn-primary">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               Data Smote Jumlah data : <b id="jDataS">0</b></div>
+                               <img id="DS" style="width: 100%; height: 100%;" src="" alt="">
+                        </div>
+                        <div class="col-auto">
+                            <button id="btnDS" class="btn btn-success">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Data Over Ssampling Jumlah data : <b id="jDataO">0</b>
+                            </div>
+                            <img id="DO" style="width: 100%; height: 100%;" src="" alt="">
+                        </div>
+                        <div class="col-auto">
+                            <button id="btnDO" class="btn btn-info">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Data Under Sampling Jumlah data : <b id="jDataU">0</b></div>
+                                <img id="DU" style="width: 100%; height: 100%;" src="" alt="">
+                        </div>
+                        <div class="col-auto">
+                            <button id="btnDU" class="btn btn-warning">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="TabelDataDA" hidden>
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Awal</h6>
+                        <a href="#" id="closeDA" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class='bx bx-x'></i></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <b style="color: blue; line-height: 2;">
+                            Export Data
+                        </b>
+                        <table class="table table-bordered" id="dataTableDA" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Username</th>
+                                    <th>Score</th>
+                                    <th>At</th>
+                                    <th>Ulasan</th>
+                                    <th>Ulasan Term</th>
+                                    <th>Ulasan Sentimen</th>
+                                    <th>Ulasan label</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="TabelDataDS" hidden>
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Data SMOTE</h6>
+                        <a href="#" id="closeDS" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class='bx bx-x'></i></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <b style="color: blue; line-height: 2;">
+                            Export Data
+                        </b>
+                        <table class="table table-bordered" id="dataTableDS" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Ulasan</th>
+                                    <th>Sentimen</th>
+                                    <th>label</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="TabelDataDU" hidden>
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Data Under Sampling</h6>
+                        <a href="#" id="closeDU" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class='bx bx-x'></i></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <b style="color: blue; line-height: 2;">
+                            Export Data
+                        </b>
+                        <table class="table table-bordered" id="dataTableDU" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Ulasan</th>
+                                    <th>Sentimen</th>
+                                    <th>label</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="TabelDataDO" hidden>
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Data Over Sampling</h6>
+                        <a href="#" id="closeDO" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class='bx bx-x'></i></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <b style="color: blue; line-height: 2;">
+                            Export Data
+                        </b>
+                        <table class="table table-bordered" id="dataTableDO" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Ulasan</th>
+                                    <th>Sentimen</th>
+                                    <th>label</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Content Row -->
+    <div class="row">
+       
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<script>
+    document.getElementById('SubmitSmote').addEventListener('submit', function(e){
+        e.preventDefault();
+        document.getElementById('grap').setAttribute('hidden',true)
+        document.getElementById('TabelDataDA').setAttribute('hidden', true)
+        document.getElementById('TabelDataDS').setAttribute('hidden', true)
+        document.getElementById('TabelDataDO').setAttribute('hidden', true)
+        document.getElementById('TabelDataDU').setAttribute('hidden', true)
+        Swal.fire({
+            icon: 'success',
+            title: 'Proses Tunggu Sebentar..!',
+            showConfirmButton: false,
+            timer: 4000
+        })
+        var config = { headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'}
+        }
+        var data = document.getElementById('nameFile')
+        var dataI = data.value
+        axios.post('http://localhost:5000/Smote', {name: dataI}, config)
+        .then(res =>{
+            Swal.fire({
+                icon: 'success',
+                title: 'Proses Selesai..!',
+                showConfirmButton: false,
+                timer: 4000
+            })
+            document.getElementById('grap').removeAttribute('hidden')
+            // image
+            var dataA = res.data.dataPath[0]['DA']
+            var dataS = res.data.dataPath[0]['DS']
+            var dataO = res.data.dataPath[0]['DO']
+            var dataU = res.data.dataPath[0]['DU']
+            document.getElementById('DA').setAttribute('src', "{{ url_for('static',filename='imagePlotSen/DataAwal/DataAwal.png') }}")
+            document.getElementById('DS').setAttribute('src', "{{ url_for('static',filename='imagePlotSen/DataSmote/DataSmote.png') }}")
+            document.getElementById('DO').setAttribute('src', "{{ url_for('static',filename='imagePlotSen/DataOver/DataOver.png') }}")
+            document.getElementById('DU').setAttribute('src', "{{ url_for('static',filename='imagePlotSen/DataUnder/DataUnder.png') }}")
+
+            // table
+            var tableA = res.data.data[0]['dataSa']
+            var JdataA = tableA.length
+            document.getElementById('jDataA').innerHTML= JdataA
+            var tableS = res.data.data[0]['dataSs']
+            var JdataS = tableS.length
+            document.getElementById('jDataS').innerHTML= JdataS
+            var tableO = res.data.data[0]['dataSo']
+            var JdataO = tableO.length
+            document.getElementById('jDataO').innerHTML= JdataO
+            var tableU = res.data.data[0]['dataSu']
+            var JdataU = tableU.length
+            document.getElementById('jDataU').innerHTML= JdataU
+
+            document.getElementById('btnDA').addEventListener('click', function(){
+                document.getElementById('grap').setAttribute('hidden',true)
+                document.getElementById('TabelDataDA').removeAttribute('hidden')
+                $(document).ready(function(){
+                    var tableDA = []
+                    for(var i = 0; i < tableA.length; i++){
+                        tableDA.push([ tableA[i][0],tableA[i][1],tableA[i][2],tableA[i][3],tableA[i][4],tableA[i][5],tableA[i][6],tableA[i][7] ])
+                    }
+                    $('#dataTableDA').DataTable({
+                        data: tableDA,
+                        deferRender:    true,
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ]
+                    })
+                })
+            })
+            document.getElementById('btnDS').addEventListener('click', function(){
+                document.getElementById('grap').setAttribute('hidden',true)
+                document.getElementById('TabelDataDS').removeAttribute('hidden')
+                $(document).ready(function(){
+                    var tableDS = []
+                    var S = 0
+                    for(var i = 0; i < tableS.length; i++){
+                        S++
+                        tableDS.push([ S, tableS[i][0],tableS[i][1],tableS[i][2] ])
+                    }
+                    $('#dataTableDS').DataTable({
+                        data: tableDS,
+                        deferRender:    true,
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ]
+                    })
+                })
+            })
+            document.getElementById('btnDU').addEventListener('click', function(){
+                document.getElementById('grap').setAttribute('hidden',true)
+                document.getElementById('TabelDataDU').removeAttribute('hidden')
+                $(document).ready(function(){
+                    var tableDU = []
+                    var U = 0
+                    for(var i = 0; i < tableU.length; i++){
+                        U++
+                        tableDU.push([U ,tableU[i][0],tableU[i][1],tableU[i][2]])
+                    }
+                    $('#dataTableDU').DataTable({
+                        data: tableDU,
+                        deferRender:    true,
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ]
+                    })
+                })
+            })
+            document.getElementById('btnDO').addEventListener('click', function(){
+                document.getElementById('grap').setAttribute('hidden',true)
+                document.getElementById('TabelDataDO').removeAttribute('hidden')
+                $(document).ready(function(){
+                    var tableDO = []
+                    var O = 0
+                    for(var i = 0; i < tableO.length; i++){
+                        O++
+                        tableDO.push([O,tableO[i][0],tableO[i][1],tableO[i][2]])
+                    }
+                    $('#dataTableDO').DataTable({
+                        data: tableDO,
+                        deferRender:    true,
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ]
+                    })
+                })
+            })
+            document.getElementById('closeDA').addEventListener('click', function(){
+                document.getElementById('TabelDataDA').setAttribute('hidden', true)
+                document.getElementById('grap').removeAttribute('hidden')
+            })
+            document.getElementById('closeDS').addEventListener('click', function(){
+                document.getElementById('TabelDataDS').setAttribute('hidden', true)
+                document.getElementById('grap').removeAttribute('hidden')
+            })
+            document.getElementById('closeDU').addEventListener('click', function(){
+                document.getElementById('TabelDataDU').setAttribute('hidden', true)
+                document.getElementById('grap').removeAttribute('hidden')
+            })
+            document.getElementById('closeDO').addEventListener('click', function(){
+                document.getElementById('TabelDataDO').setAttribute('hidden', true)
+                document.getElementById('grap').removeAttribute('hidden')
+            })
+            
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan..!',
+                showConfirmButton: false,
+                timer: 4000
+            })
+        })
+    })
+</script>
+
+{% include 'layouts/footer.html' %}

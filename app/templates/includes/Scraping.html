@@ -1,0 +1,242 @@
+{% include 'layouts/header.html' %} 
+
+{% include 'layouts/sideBar.html' %} 
+
+{% include 'layouts/topBar.html' %} 
+
+ <!-- Begin Page Content -->
+ <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Scraping</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card mb-4 py-3 border-left-primary">
+                <div class="card-body">
+                    <form id="form">
+                        <b style="color: black;">
+                            Masukkan id Scraping google PlayStore 
+                        </b>
+                        <div style="line-height: 2;">
+                            example : https://play.google.com/store/apps/details?id=<b style="background-color: blue; border-radius: 2px; color: white;">com.nianticlabs.pokemongo</b>&hl=id
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user" id="scraping" name="idscraping" placeholder="id=" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">SCRAPING</button>
+                        <p>
+                            <div class="row no-gutters align-items-center" id="prgresScr" hidden>
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="labelProgress">0%</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div id="progress-bar" class="progress-bar bg-info" role="progressbar"
+                                            style="width: 0%" aria-valuenow="50" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row" id="Jumlahdata" hidden>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                               Jumlah Data</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="JumlahData" style="top: 20px; position: relative; font-size: 60px; text-transform: capitalize;"></div>
+                        </div>
+                        <div class="col-auto" style="position: relative; top: 35px; font-size: 30px">
+                            <i class="fas fa-database fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- Earnings (Monthly) Card Example -->
+         <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <form>
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Masukkan Jumlah Yang Akan Diambil</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <input type="number" class="form-control form-control-user" id="NumberScr" name="Numscraping" placeholder="012345" required>
+                                </div>
+                                <br>
+                                <button type="button" onclick="formCut()" class="btn btn-success">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Content Row -->
+
+    <div class="row" id="TabelDataSC" hidden>
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Hasil Scraping</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <b style="color: blue;">
+                            Export Data
+                        </b>
+                        <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Username</th>
+                                    <th>Score</th>
+                                    <th>At</th>
+                                    <th>Ulasan</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+<script>
+    const form = document.getElementById('form')
+    const bar = document.getElementById('progress-bar')
+    const labelbar = document.getElementById('labelProgress')
+    const prgresScr = document.getElementById('prgresScr')
+    const dataTableHide = document.getElementById('TabelDataSC')
+    const dataArray = []
+    form.addEventListener('submit', function(e){
+        onProgress()
+        document.getElementById('Jumlahdata').setAttribute('hidden',true)
+        dataTableHide.setAttribute('hidden', true)
+        Swal.fire({
+            icon: 'success',
+            title: 'Proses Scraping Data Tunggu Sebentar..!',
+            showConfirmButton: false,
+            timer: 4000
+        });
+        prgresScr.removeAttribute('hidden')
+        e.preventDefault();
+        onProgress()
+        const file = document.getElementById("scraping");
+        const fileScr = file.value;
+        
+        var config = { headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'}
+        }
+
+        // axios
+        axios.post('http://localhost:5000/ScrapingData', { kata_kunci : fileScr }, config)
+            .then((res) =>{
+                let datares = res
+                onProgress(datares)
+                formCut(datares)
+                document.getElementById('JumlahData').innerHTML = res.data.JumlahData
+            })
+            .catch((err) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Proses Error..!',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            })
+    })
+    function onProgress(e){
+        var value = 0;
+        function barAnim(){
+            value++; 
+            labelbar.innerHTML = value+"%";
+            bar.style.width = value+"%"; 
+            if (value == 25 || value == 55 || value == 85) { 
+                return setTimeout(barAnim, 4000); 
+            }
+            if(value >= 100){
+                labelbar.innerHTML = 0+"%";
+                bar.style.width = 0+"%";
+                prgresScr.setAttribute('hidden', true)
+                document.getElementById('Jumlahdata').removeAttribute('hidden')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Proses Success..!',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            }
+            if(value >= 100 || e != undefined){
+                return value == 100 || setTimeout(barAnim, 1);
+            }
+            setTimeout(barAnim, 4000);
+        }
+        setTimeout(barAnim, 4000);
+    }
+    const dataFormCut = document.getElementById('NumberScr')
+    function formCut(e){
+        dataArray.push(e)
+        const jumlahData = dataArray[0].data.dataScrGP
+        var NBScr = Number(dataFormCut.value)
+        if(NBScr){
+            dataTableHide.removeAttribute('hidden')
+            Swal.fire({
+                icon: 'success',
+                title: 'Proses Success Data = '+NBScr,
+                showConfirmButton: false,
+                timer: 4000
+            });
+        }
+        var RD = jumlahData.filter((x, y) => y < NBScr);
+        $(document).ready(function() {
+            var dataRD =[]
+            var a = 0;
+            for (var i=0; i<NBScr; i++) {
+                a++
+                dataRD.push( [ a, RD[i][0].replace(/,/g, ""), RD[i][2], RD[i][3].replace(/,/g, ""), RD[i][1].replace(/,/g, "") ] );
+            }
+            $('#dataTable1').DataTable({
+              data:           dataRD,
+              deferRender:    true,
+              destroy: true,
+              dom: 'Bfrtip',
+              buttons: [
+                'copy', 'csv', 'excel', 'pdf'
+            ]
+            });
+        });
+    }
+</script>
+
+{% include 'layouts/footer.html' %}

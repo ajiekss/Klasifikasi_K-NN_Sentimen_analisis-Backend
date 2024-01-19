@@ -1,0 +1,109 @@
+ <!-- Sidebar -->
+ <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <!-- <i class="fas fa-laugh-wink"></i> --> <h4>L A</h5>
+        </div>
+        <div class="sidebar-brand-text mx-3">Leni</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {% if activeHm == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link" href="/">
+            {% if activeHm == 'active' %} <i class='bx bxs-dashboard bx-tada bx-xs'></i> {% else %}<i class='bx bxs-dashboard'></i> {% endif %}
+            <span>Dashboard</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Interface
+    </div>
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item {% if activeSc == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link" href="/scraping">
+            {% if activeSc == 'active' %} <i class='bx bx-refresh bx-spin bx-xs'></i> {% else %} <i class='bx bx-refresh bx-xs'></i> {% endif %}
+            <span>Scraping</span></a>
+    </li>
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item {% if activePre == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link" href="/preprocessing">
+            {% if activePre == 'active' %} <i class='bx bx-horizontal-center bx-flashing'></i> {% else %} <i class='bx bx-horizontal-center'></i> {% endif %}
+            <span>Preprocessing</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item {% if activeSe == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link" href="/sentimen">
+            {% if activeSe == 'active' %} <i class='bx bx-horizontal-right bx-flashing'></i> {% else %} <i class='bx bx-horizontal-right'></i> {% endif %}
+            <span>Proses Sentimen</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item {% if activeSmote == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link" href="/smote">
+            {% if activeSmote == 'active' %} <i class='bx bx-transfer bx-flashing'></i> {% else %} <i class='bx bx-transfer'></i> {% endif %}
+            <span>Proses Smote</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+    
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Data
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item {% if activeDA == 'active' or activeDP == 'active' or activeSDP == 'active' or activeDS == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link {% if activeDA == 'active' or activeDP == 'active' or activeSDP == 'active' or activeDS == 'active' %}  {% else %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="{% if activeDA == 'active' or activeDP == 'active' or activeSDP == 'active' or activeDS == 'active' %} false {% else %} true {% endif %}" aria-controls="collapseTwo">
+            {% if activeDA == 'active' or activeDP == 'active' or activeDS == 'active' %} <i class='bx bx-data bx-flashing'></i> {% else %} <i class='bx bx-data'></i> {% endif %}
+            <span>Data Awal - Sentimen</span>
+        </a>
+        <div id="collapseTwo" class="collapse {% if activeDA == 'active' or activeDP == 'active' or activeSDP == 'active' or activeDS == 'active' %} show {% else %} {% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Data:</h6>
+                <a class="collapse-item {% if activeDA == 'active' %} active {% else %} {% endif %}" href="/Data-Awal">Data Awal</a>
+                <a class="collapse-item {% if activeDP == 'active' %} active {% else %} {% endif %}" href="/Data-Preprocessing">Data Preprocessing</a>
+                <a class="collapse-item {% if activeSDP == 'active' %} active {% else %} {% endif %}" href="/Step-Data-Preprocessing">Tahap Data Preprocessing</a>
+                <a class="collapse-item {% if activeDS == 'active' %} active {% else %} {% endif %}" href="/Data-Sentimen">Data Sentimen</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+    
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Klasifikasi Data
+    </div>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item {% if activeKlasifikasi == 'active' %} active {% else %} {% endif %}">
+        <a class="nav-link" href="/klasifikasi">
+            {% if activeKlasifikasi == 'active' %}<i class='bx bx-stats bx-flashing'></i> {% else %}<i class='bx bx-stats'></i> {% endif %}
+            <span>Klasifikasi</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->

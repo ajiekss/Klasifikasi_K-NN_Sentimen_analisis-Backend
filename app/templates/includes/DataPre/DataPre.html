@@ -1,0 +1,110 @@
+{% include 'layouts/header.html' %} 
+
+{% include 'layouts/sideBar.html' %} 
+
+{% include 'layouts/topBar.html' %}
+
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Data Preprocessing</h1>
+    </div>
+
+     <!-- Content Row -->
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4 py-3 border-left-success">
+                <div class="card-body">
+                    <p>Jumlah Data Awal: <b style="color: #b700ff; font-size: 15px;" id="JumlahDP"></b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Hasil Preprocessing</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+                        <!-- <div class="card-body"> -->
+                            <div class="table-responsive">
+                                <b style="color: blue;  line-height: 2;">
+                                    Export Data
+                                </b>
+                                <table class="table table-bordered" id="dataTableDP" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Username</th>
+                                            <th>Score</th>
+                                            <th>At</th>
+                                            <th>Ulasan</th>
+                                            <th>Ulasan Tokens</th>
+                                            <th>Ulasan Token Remove SW</th>
+                                            <th>Ulasan Token Normalisasi</th>
+                                            <th>Ulasan Normalisasi</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<script>
+    var config = { 
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
+    axios.get('http://localhost:5000/DataP',config)
+    .then(res =>{
+        var dataJ = res.data.data
+        document.getElementById('JumlahDP').innerHTML = res.data.jumlahData
+        $(document).ready(function(){
+            var dataDP = []
+            for(var i = 0; i < dataJ.length; i++){
+                dataDP.push([ dataJ[i][0], dataJ[i][1], dataJ[i][2], dataJ[i][3], dataJ[i][4],  dataJ[i][5], dataJ[i][6], dataJ[i][7], dataJ[i][8] ])
+            }
+            $('#dataTableDP').DataTable({
+                data: dataDP,
+                deferRender: true,
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf'
+                ]
+            })
+        })
+    })
+    .catch(err =>{
+        Swal.fire({
+            icon: 'error',
+            title: 'Data Tidak Terhubung.. !',
+            showConfirmButton: false,
+            timer: 4000
+        })
+    })
+</script>
+
+{% include 'layouts/footer.html' %}
